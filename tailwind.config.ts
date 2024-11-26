@@ -8,10 +8,10 @@ export default {
   ],
   theme: {
     extend: {
-      colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
-      },
+      colors: {},
+      fontFamily: {
+        "amer-ubuntu-sans": ["Ubuntu Sans", "Arial"]
+      }
     },
   },
   plugins: [],
