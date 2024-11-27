@@ -3,12 +3,14 @@ CREATE TABLE supplier(
 	supplier_name VARCHAR(255) NOT NULL,
 	contact_phone VARCHAR(20) NOT NULL,
 	license_plate VARCHAR(20) NOT NULL,
+	slug VARCHAR(255) NOT NULL UNIQUE,
 	material_type VARCHAR(100) NOT NULL,
 	weight_in DECIMAL(10, 2) NOT NULL,
 	weight_out DECIMAL(10, 2),
 	description TEXT,
 	creation_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 )
+
 
 
 INSERT INTO supplier (supplier_name, contact_phone, license_plate, material_type, weight_in, weight_out, description)
