@@ -2,6 +2,7 @@ import Table from "@/components/Table/Table";
 import { Supplier } from "@/typescript/interface";
 
 export default async function Home() {
+  // NEXT_PUBLIC_API_URL=http://localhost:3000
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/supplier`);
   const api_response = await response.json();
   const suppliers: Supplier[] = api_response.client;
