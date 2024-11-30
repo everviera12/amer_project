@@ -1,5 +1,5 @@
 export interface Supplier {
-  id_supplier: number;
+  id_supplier: string;
   supplier_name: string;
   contact_phone: string;
   license_plate: string;
@@ -10,6 +10,21 @@ export interface Supplier {
   creation_date: string;
 }
 
+export interface FormField {
+  db_field: string;
+  label: string;
+  type: string;
+  placeholder: string;
+}
+
+export interface SubmitFormProps {
+  setAlert: (message: string) => void;
+  formFields: FormField[];
+  routeApi: string;
+}
+
 export interface TableProps {
   suppliers: Supplier[];
+  setAlert: React.Dispatch<React.SetStateAction<{ visible: boolean; message: string; type: string }>>;
 }
+
