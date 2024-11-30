@@ -4,6 +4,98 @@ import React from "react";
 
 const Icon = ({ name, className }: IconoProps) => {
   switch (name) {
+    case "confirmation_alert":
+      return (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 100 100"
+          width="50"
+          height="50"
+          className={className}
+        >
+          <circle
+            cx="50"
+            cy="50"
+            r="45"
+            stroke="#f91600"
+            strokeWidth="8"
+            fill="rgba(249, 22, 0, 0.1)"
+          >
+            <animate
+              attributeName="r"
+              from="0"
+              to="45"
+              dur="0.3s"
+              fill="freeze"
+              begin="0s"
+            />
+          </circle>
+
+          <line
+            x1="30"
+            y1="30"
+            x2="70"
+            y2="70"
+            stroke="#f91600"
+            strokeWidth="8"
+            strokeLinecap="round"
+          >
+            <animate
+              attributeName="x2"
+              from="30"
+              to="70"
+              dur="0.3s"
+              begin="0.2s"
+              fill="freeze"
+            />
+            <animate
+              attributeName="y2"
+              from="30"
+              to="70"
+              dur="0.3s"
+              begin="0.2s"
+              fill="freeze"
+            />
+          </line>
+
+          <line
+            x1="70"
+            y1="30"
+            x2="30"
+            y2="70"
+            stroke="#f91600"
+            strokeWidth="8"
+            strokeLinecap="round"
+          >
+            <animate
+              attributeName="x2"
+              from="70"
+              to="30"
+              dur="0.3s"
+              begin="0.2s"
+              fill="freeze"
+            />
+            <animate
+              attributeName="y2"
+              from="30"
+              to="70"
+              dur="0.3s"
+              begin="0.2s"
+              fill="freeze"
+            />
+          </line>
+
+          <animateTransform
+            attributeName="transform"
+            type="scale"
+            values="1;1.2;0.95;1.05;1"
+            dur="0.6s"
+            begin="0.6s"
+            repeatCount="1"
+          />
+        </svg>
+      );
+
     case "error":
       return (
         <svg
@@ -21,7 +113,8 @@ const Icon = ({ name, className }: IconoProps) => {
           />
         </svg>
       );
-    case "warning":
+    
+      case "warning":
       return (
         <svg
           xmlns="http://www.w3.org/2000/svg"

@@ -10,8 +10,11 @@ export default {
     extend: {
       colors: {},
       fontFamily: {
-        "amer-ubuntu-sans": ["Ubuntu Sans", "Arial"]
-      }
+        "amer-ubuntu-sans": ["Ubuntu Sans", "Arial"],
+      },
+      backgroundImage: {
+        "amer-logo": "linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)), url('/amer_logo.png')",
+      },
     },
   },
   plugins: [],

@@ -12,7 +12,6 @@ CREATE TABLE supplier(
 )
 
 
-
 INSERT INTO supplier (supplier_name, contact_phone, license_plate, material_type, weight_in, weight_out, description)
 VALUES
   ('Acme Industries', '555-123-4567', 'XYZ1234', 'Steel', 1000.00, 950.00, 'Supplier of steel materials for construction projects'),
@@ -21,6 +20,7 @@ VALUES
 
 select * from supplier;
 
+ALTER TABLE supplier ADD COLUMN slug VARCHAR(255) UNIQUE;
 
 SELECT column_name, data_type, is_nullable 
 FROM information_schema.columns 

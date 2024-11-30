@@ -8,13 +8,16 @@ import ButtonSort from "./ButtonSort";
 import Icon from "../Icons/Icon";
 import { deleteSupplier } from "@/utils/services/supplierApi";
 import { IconoProps } from "@/typescript/type";
+import DeleteAlert from "../Alerts/ConfirmationAlert";
 
 const Table = ({ suppliers, setAlert }: TableProps) => {
+  const [deleteAlert, setDeleteAlert] = useState(false);
+  const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSortedAscending, setIsSortedAscending] = useState(true);
   const [sortedSuppliers, setSortedSuppliers] = useState(suppliers);
   const [currentPage, setCurrentPage] = useState(1);
-  const suppliersPerPage = 10;
+  const suppliersPerPage = 11;
 
   const filterData = sortedSuppliers.filter(
     (supplier) =>
@@ -51,6 +54,24 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
 
   const totalPages = Math.ceil(filterData.length / suppliersPerPage);
 
+  const handleDeleteClick = (supplierId: string) => {
+    setSelectedSupplier(supplierId);
+    setDeleteAlert(true);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedSupplier) {
+      await deleteSupplier(selectedSupplier, setAlert, setSortedSuppliers);
+    }
+    setDeleteAlert(false);
+    setSelectedSupplier(null);
+  };
+
+  const handleCancelDelete = () => {
+    setDeleteAlert(false);
+    setSelectedSupplier(null);
+  };
+
   return (
     <>
       {/* input search */}
@@ -79,7 +100,7 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
           </thead>
 
           {/* body */}
-          <tbody>
+          <tbody className="bg-amer-logo bg-[45%] bg-opacity-95 bg-no-repeat">
             {currentSuppliers.length > 0 ? (
               currentSuppliers.map((supplier) => (
                 <tr
@@ -103,16 +124,11 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
                         title={action.title}
                         onClick={() => {
                           if (action.name === "delete") {
-                            deleteSupplier(
-                              supplier.id_supplier,
-                              setAlert, 
-                              setSortedSuppliers
-                            );
+                            handleDeleteClick(supplier.id_supplier);
                           } else {
                             console.log("another method");
                           }
                         }}
-                        
                       >
                         <Icon
                           name={action.icon as IconoProps["name"]}
@@ -153,6 +169,15 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
           </button>
         ))}
       </div>
+
+      {/* Alerta de eliminación */}
+      {deleteAlert && (
+        <DeleteAlert
+          message="¿Estás seguro de eliminar este elemento?"
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
+        />
+      )}
     </>
   );
 };

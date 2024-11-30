@@ -28,3 +28,7 @@ export interface TableProps {
   setAlert: React.Dispatch<React.SetStateAction<{ visible: boolean; message: string; type: string }>>;
 }
 
+export interface NotificationProps {
+  message: string;
+  type: "delete" | "create" | "warning" | "error";
+}

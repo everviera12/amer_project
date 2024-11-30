@@ -1,5 +1,6 @@
 export type IconoProps = {
   name:
+    | "confirmation_alert"
     | "error"
     | "supplier"
     | "view"

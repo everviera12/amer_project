@@ -1,7 +1,6 @@
 "use client";
 
 import Alert from "@/components/Alert";
-import Icon from "@/components/Icons/Icon";
 import Loader from "@/components/Loader";
 import Modal from "@/components/Modal/Modal";
 import Table from "@/components/Table/Table";
@@ -55,6 +54,7 @@ export default function Home() {
       {alert.visible && (
         <Alert message={alert.message} type={alert.type as any} />
       )}
+
     </div>
   );
 }

@@ -1,11 +1,7 @@
 import { useState, useEffect } from "react";
 import clsx from "clsx";
 import Icon from "./Icons/Icon";
-
-interface NotificationProps {
-  message: string;
-  type: "delete" | "create" | "warning" | "error";
-}
+import { NotificationProps } from "@/typescript/interface";
 
 const Alert: React.FC<NotificationProps> = ({ message, type }) => {
   const [isVisible, setIsVisible] = useState(true);
