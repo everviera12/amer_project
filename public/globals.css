@@ -4,9 +4,19 @@
 
 @font-face {
   font-family: "Ubuntu Sans";
-  src: url("../app/fonts/UbuntuSans_Condensed-Regular.ttf") format("ttf");
+  src: url("./fonts/UbuntuSans_Condensed-Regular.ttf") format("ttf");
   font-weight: normal;
 }
+
+/* body {
+  background-image: url('../public/amer_logo.png');
+  background-repeat: no-repeat;
+  background-size: 50%;
+  width: 100%;
+  justify-content: center;
+  display: grid;
+grid-template-columns: 1;
+} */
 
 /* START || LOADER */
 .loader {
@@ -14,7 +24,6 @@
   aspect-ratio: 1;
   display: grid;
 }
-
 .loader::before,
 .loader::after {
   content: "";
@@ -25,20 +34,17 @@
   background-size: 12px 12px;
   animation: l12 1s infinite;
 }
-
 .loader::before {
   margin: 4px;
   filter: hue-rotate(45deg);
   background-size: 8px 8px;
   animation-timing-function: linear;
 }
-
 @keyframes l12 {
   100% {
     transform: rotate(0.5turn);
   }
 }
-
 /* END || LOADER */
 
 /* START || MODAL */
