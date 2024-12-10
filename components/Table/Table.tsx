@@ -1,5 +1,6 @@
 import { useState, useEffect, } from "react";
 import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation';
 import InputSearch from "./InputSearch";
 import ButtonSort from "./ButtonSort";
 import Icon from "../Icons/Icon";
@@ -20,6 +21,7 @@ const Table: React.FC<TableProps> = ({ suppliers, setAlert }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showEditForm, setShowEditForm] = useState(false); // Estado para controlar la visibilidad del formulario
   const suppliersPerPage = 11;
+  const router = useRouter();
 
   // Filtrado y paginación del listado de proveedores
   const filterData = sortedSuppliers.filter(
@@ -226,7 +228,7 @@ const Table: React.FC<TableProps> = ({ suppliers, setAlert }) => {
                             handleEditClick(supplier); 
                           } else if (action.name === 'get') {
                             console.log("Metodo get para ver al usuario y sus detalles");
-                            
+                            router.push(`/providers/${supplier.id_supplier}`); 
                           }
                         }}
                       >

@@ -2,6 +2,50 @@ import { connection } from "@/utils/database/config";
 import { generateSlug } from "@/utils/generateSlug";
 import { NextRequest, NextResponse } from "next/server";
 
+// Método GET para obtener los detalles del proveedor por ID
+export async function GET(
+  req: NextRequest,
+  { params }: { params: { id_supplier: string } }
+) {
+  try {
+    const id_supplier = params.id_supplier;
+
+    if (!id_supplier) {
+      return NextResponse.json(
+        { message: "Supplier ID is required for fetching details" },
+        { status: 400 }
+      );
+    }
+
+    const query = `
+      SELECT * FROM supplier
+      WHERE id_supplier = $1
+    `;
+
+    const result = await connection.query(query, [id_supplier]);
+
+    const supplier = result.rows[0];
+
+    if (!supplier) {
+      return NextResponse.json(
+        { message: "Supplier not found" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: "Supplier fetched successfully", supplier },
+      { status: 200 }
+    );
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Error fetching supplier details", error: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+// Método PUT para actualizar los detalles del proveedor
 export async function PUT(
   request: Request,
   { params }: { params: { id_supplier: string } }
@@ -75,6 +119,7 @@ export async function PUT(
   }
 }
 
+// Método DELETE para eliminar un proveedor por ID
 export async function DELETE(
   req: Request,
   { params }: { params: { id_supplier: string } }
