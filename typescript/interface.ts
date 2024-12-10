@@ -8,6 +8,7 @@ export interface Supplier {
   weight_out: number;
   description?: string;
   creation_date: string;
+  slug: string,
 }
 
 export interface FormField {
@@ -15,13 +16,14 @@ export interface FormField {
   label: string;
   type: string;
   placeholder: string;
+  value?: string;
 }
 
 export interface SubmitFormProps {
-  setAlert: (message: string) => void;
+  setAlert: (alert: { visible: boolean; message: string; type: string }) => void;
   formFields: FormField[];
-  routeApi: string;
 }
+
 
 export interface TableProps {
   suppliers: Supplier[];

@@ -1,24 +1,27 @@
-"use client";
-
-import { TableProps } from "@/typescript/interface";
-import { ACTIONS_TABLE, TABLE_HEADERS } from "@/utils/constants";
-import { useState, useEffect } from "react";
+import { useState, useEffect, } from "react";
+import { redirect } from 'next/navigation'
 import InputSearch from "./InputSearch";
 import ButtonSort from "./ButtonSort";
 import Icon from "../Icons/Icon";
 import { deleteSupplier } from "@/utils/services/supplierApi";
 import { IconoProps } from "@/typescript/type";
 import DeleteAlert from "../Alerts/ConfirmationAlert";
+import EditForm from "../Forms/EditForm";
+import { ACTIONS_TABLE, TABLE_HEADERS } from "@/utils/constants";
+import { TableProps } from "@/typescript/interface";
 
-const Table = ({ suppliers, setAlert }: TableProps) => {
+const Table: React.FC<TableProps> = ({ suppliers, setAlert }) => {
   const [deleteAlert, setDeleteAlert] = useState(false);
   const [selectedSupplier, setSelectedSupplier] = useState<string | null>(null);
+  const [supplierToEdit, setSupplierToEdit] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [isSortedAscending, setIsSortedAscending] = useState(true);
   const [sortedSuppliers, setSortedSuppliers] = useState(suppliers);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showEditForm, setShowEditForm] = useState(false); // Estado para controlar la visibilidad del formulario
   const suppliersPerPage = 11;
 
+  // Filtrado y paginación del listado de proveedores
   const filterData = sortedSuppliers.filter(
     (supplier) =>
       supplier.supplier_name
@@ -35,6 +38,17 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
     indexOfFirstSupplier,
     indexOfLastSupplier
   );
+
+  useEffect(() => {
+    const filteredSuppliers = suppliers.filter(
+      (supplier) =>
+        supplier.supplier_name
+          .toLowerCase()
+          .includes(searchValue.toLowerCase()) ||
+        supplier.license_plate.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setSortedSuppliers(filteredSuppliers);
+  }, [searchValue, suppliers]);
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -72,10 +86,94 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
     setSelectedSupplier(null);
   };
 
+  const handleEditClick = (supplier: any) => {
+    setSupplierToEdit(supplier);
+    setShowEditForm(true); // Mostrar el formulario de edición
+  };
+
+  const handleCloseEditForm = () => {
+    setShowEditForm(false); // Cerrar el formulario de edición
+    setSupplierToEdit(null);
+  };
+
   return (
     <>
-      {/* input search */}
       <InputSearch searchValue={searchValue} setSearchValue={setSearchValue} />
+
+      {/* Mostrar el formulario de edición si se ha seleccionado un proveedor */}
+      {showEditForm && supplierToEdit && (
+        <div className="">
+          <div
+            className="bg-white border-green-600 border-2 rounded-xl drop-shadow-lg p-5 w-[355px] sm:w-auto xl:w-4/5 md:p-10 lg:p-16 "
+            id="open-modal"
+          >
+            <button onClick={handleCloseEditForm}>
+              <Icon
+                name="close"
+                className="size-8 z-10 absolute top-3 right-5 text-red-600"
+              />
+            </button>
+
+            <div className="grid justify-center">
+              <EditForm
+                setAlert={setAlert}
+                formFields={[
+                  {
+                    label: "Nombre del proveedor",
+                    db_field: "supplier_name",
+                    type: "text",
+                    placeholder: "Nombre del proveedor",
+                    value: supplierToEdit.supplier_name,
+                  },
+                  {
+                    label: "Teléfono de contacto",
+                    db_field: "contact_phone",
+                    type: "text",
+                    placeholder: "Teléfono de contacto",
+                    value: supplierToEdit.contact_phone,
+                  },
+                  {
+                    label: "Matrícula",
+                    db_field: "license_plate",
+                    type: "text",
+                    placeholder: "Matrícula",
+                    value: supplierToEdit.license_plate,
+                  },
+                  {
+                    label: "Tipo de material",
+                    db_field: "material_type",
+                    type: "text",
+                    placeholder: "Tipo de material",
+                    value: supplierToEdit.material_type,
+                  },
+                  {
+                    label: "Peso de entrada",
+                    db_field: "weight_in",
+                    type: "text",
+                    placeholder: "Peso de entrada",
+                    value: supplierToEdit.weight_in,
+                  },
+                  {
+                    label: "Peso de salida",
+                    db_field: "weight_out",
+                    type: "text",
+                    placeholder: "Peso de salida",
+                    value: supplierToEdit.weight_out,
+                  },
+                  {
+                    label: "Descripción",
+                    db_field: "description",
+                    type: "text-area",
+                    placeholder: "Descripción",
+                    value: supplierToEdit.description,
+                  },
+                ]}
+                supplierId={supplierToEdit.id_supplier}
+              />{" "}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="overflow-x-auto drop-shadow-lg rounded-lg space-y-7">
         <table className="w-[1500px] xl:w-[1440px] 2xl:w-[2560px] bg-white border border-gray-200 rounded-lg">
@@ -85,9 +183,8 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
               {TABLE_HEADERS.map((header, index) => (
                 <th
                   key={index}
-                  className={`p-4 ${index === 0 ? "rounded-l-lg" : ""} ${
-                    index === TABLE_HEADERS.length - 1 ? "rounded-r-lg" : ""
-                  }`}
+                  className={`p-4 ${index === 0 ? "rounded-l-lg" : ""} ${index === TABLE_HEADERS.length - 1 ? "rounded-r-lg" : ""
+                    }`}
                 >
                   {header.filter ? (
                     <ButtonSort header={header} handleSort={handleSort} />
@@ -125,8 +222,11 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
                         onClick={() => {
                           if (action.name === "delete") {
                             handleDeleteClick(supplier.id_supplier);
-                          } else {
-                            console.log("another method");
+                          } else if (action.name === "put") {
+                            handleEditClick(supplier); 
+                          } else if (action.name === 'get') {
+                            console.log("Metodo get para ver al usuario y sus detalles");
+                            
                           }
                         }}
                       >
@@ -158,11 +258,10 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
         {Array.from({ length: totalPages }, (_, index) => (
           <button
             key={index}
-            className={`px-4 py-2 rounded ${
-              currentPage === index + 1
-                ? "bg-green-600 text-white"
-                : "bg-gray-200 text-gray-700"
-            }`}
+            className={`px-4 py-2 rounded ${currentPage === index + 1
+              ? "bg-green-600 text-white"
+              : "bg-gray-200 text-gray-700"
+              }`}
             onClick={() => paginate(index + 1)}
           >
             {index + 1}
@@ -171,9 +270,12 @@ const Table = ({ suppliers, setAlert }: TableProps) => {
       </div>
 
       {/* Alerta de eliminación */}
-      {deleteAlert && (
+      {deleteAlert && selectedSupplier && (
         <DeleteAlert
-          message="¿Estás seguro de eliminar este elemento?"
+          message={`¿Estás seguro de eliminar a ${suppliers.find(
+            (supplier) => supplier.id_supplier === selectedSupplier
+          )?.supplier_name
+            }?`}
           onConfirm={handleConfirmDelete}
           onCancel={handleCancelDelete}
         />

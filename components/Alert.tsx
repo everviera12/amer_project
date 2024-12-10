@@ -8,19 +8,20 @@ const Alert: React.FC<NotificationProps> = ({ message, type }) => {
   const [fadeClass, setFadeClass] = useState("opacity-0 translate-y-10");
 
   useEffect(() => {
-    setFadeClass(
-      "transition-all transform opacity-100 translate-y-0 duration-500"
-    );
+    setFadeClass("transition-all transform opacity-100 translate-y-0 duration-500");
+    const timer = setTimeout(() => {
+      setIsVisible(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const closeNotification = () => {
-    setFadeClass(
-      "transition-all transform opacity-0 translate-y-10 duration-500"
-    );
+    setFadeClass("transition-all transform opacity-0 translate-y-10 duration-500");
 
     setTimeout(() => {
       setIsVisible(false);
-    }, 1500);
+    }, 500); 
   };
 
   const getIcon = () => {

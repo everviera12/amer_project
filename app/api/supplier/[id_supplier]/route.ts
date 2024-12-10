@@ -1,6 +1,6 @@
 import { connection } from "@/utils/database/config";
 import { generateSlug } from "@/utils/generateSlug";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 export async function PUT(
   request: Request,

@@ -6,7 +6,8 @@ export async function getSuppliers(
 ) {
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/supplier`
+      // `${process.env.NEXT_PUBLIC_API_URL}/api/supplier`
+      `http://localhost:3000/api/supplier`
     );
     if (!response.ok) {
       throw new Error("Error fetching suppliers");
@@ -22,7 +23,7 @@ export async function getSuppliers(
 
 export const postSupplier = async (
   e: React.FormEvent<HTMLFormElement>,
-  { formFields, formRefs, setAlert, routeApi }: any
+  { formFields, formRefs, setAlert }: any
 ) => {
   e.preventDefault();
   console.log("Sending form...");
@@ -35,7 +36,8 @@ export const postSupplier = async (
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/${routeApi}`,
+      // `${process.env.NEXT_PUBLIC_API_URL}/api/${routeApi}`,
+      `http://localhost:3000/api/supplier`,
       {
         method: "POST",
         headers: {
@@ -52,7 +54,11 @@ export const postSupplier = async (
         window.location.reload();
       }, 2000);
       console.log("new provider:", result);
-      setAlert(true);
+      setAlert({
+        visible: true,
+        message: `Proveedor agregado correctamente`,
+        type: "create",
+      });
     } else {
       console.log(result.message);
       alert(result.message || "Error adding supplier");
@@ -100,5 +106,40 @@ export const deleteSupplier = async (
       message: "Ocurrió un error al eliminar el proveedor",
       type: "error",
     });
+  }
+};
+
+export const putSupplier = async (
+  e: React.FormEvent<HTMLFormElement>,
+  { formFields, formRefs, setAlert, id_supplier }: { formFields: any, formRefs: any, setAlert: any, id_supplier: string }
+) => {
+  try {
+    const supplierData = formFields.reduce((acc: any, field: any) => {
+      acc[field.db_field] = formRefs.current[field.db_field]?.value || "";
+      return acc;
+    }, {});
+    
+    const response = await fetch(`http://localhost:3000/api/supplier/${id_supplier}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(supplierData),
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      setAlert({ visible: true, type: "create", message: result.message });
+
+      // Esperar 1.5 segundos y luego recargar la página
+      setTimeout(() => {
+        window.location.reload();
+      }, 1500);
+    } else {
+      setAlert({ type: "error", message: result.message });
+    }
+  } catch (error) {
+    setAlert({ type: "error", message: "Error actualizando el proveedor" });
   }
 };
